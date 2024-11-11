@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FactoriesHH;
+﻿namespace FactoriesHH;
 
 /// <summary>
 /// Класс, представляющий грузовик.
@@ -15,15 +9,17 @@ public class Truck
     public double AverageLoad { get; private set; }
     public string LoadComposition { get; private set; }
     public Dictionary<string, int> TotalProductCounts { get; private set; }
+    public int Trips { get; private set; }
+
 
     private int totalLoad;
-    public int trips { get; private set; }
+
 
     public Truck(int capacity)
     {
         Capacity = capacity;
         totalLoad = 0;
-        trips = 0;
+        Trips = 0;
         TotalProductCounts = new Dictionary<string, int>();
     }
 
@@ -37,18 +33,17 @@ public class Truck
         {
             Thread.Sleep(100);
 
-            if (warehouse.isFinish) return;
+            if (warehouse.IsFinish) return;
 
-            if (!warehouse.isCanUpload) continue;
+            if (!warehouse.IsCanUpload) continue;
 
             var load = warehouse.LoadTruck(Capacity);
             totalLoad += load.Values.Sum();
-            trips++;
+            Trips++;
 
-            AverageLoad = (double)totalLoad / trips;
+            AverageLoad = (double)totalLoad / Trips;
             LoadComposition = string.Join(", ", load.Select(p => $"{p.Key}: {p.Value}"));
 
-            // Обновляем статистику по перевезённым продуктам
             foreach (var product in load)
             {
                 if (!TotalProductCounts.ContainsKey(product.Key))

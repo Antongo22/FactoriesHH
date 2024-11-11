@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+﻿namespace FactoriesHH;
 
-namespace FactoriesHH;
 /// <summary>
 /// Главный класс программы, отвечающий за управление производством, складированием и доставкой продукции.
 /// </summary>
@@ -136,7 +131,7 @@ public class Program
                 var factoryTasks = factories.Select(f => Task.Run(() => f.StartProduction(day, hour))).ToArray();
                 Task.WaitAll(factoryTasks);
 
-                warehouseLoadByDay[day] = warehouse.currentLoad;
+                warehouseLoadByDay[day] = warehouse.CurrentLoad;
             }
 
             Console.WriteLine($"День {day}: Наполнение склада - {warehouseLoadByDay[day]} единиц продукции");
@@ -179,12 +174,12 @@ public class Program
 
             foreach (var product in truck.TotalProductCounts)
             {
-                double averageProductLoad = (double)product.Value / truck.trips;
+                double averageProductLoad = (double)product.Value / truck.Trips;
                 Console.WriteLine($"\tСреднее количество перевезенной продукции {product.Key}: {averageProductLoad}");
             }
 
             Console.WriteLine($"\tКоличество всей продукции: {totalProductCount}");
-            Console.WriteLine($"\tВсего поездок: {truck.trips}");
+            Console.WriteLine($"\tВсего поездок: {truck.Trips}");
             Console.WriteLine($"\tСреднее количество перевезенной продукции: {truck.AverageLoad}");
         }
     }

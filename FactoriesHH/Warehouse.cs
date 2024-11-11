@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FactoriesHH;
+﻿namespace FactoriesHH;
 
 /// <summary>
 /// Класс, представляющий склад.
@@ -12,8 +6,13 @@ namespace FactoriesHH;
 public class Warehouse
 {
     public int capacity { get; private set; }
+    private Dictionary<string, int> productCounts;
+    public bool IsCanUpload { get; private set; } = false;
+    public bool IsFinish { get; private set; } = false;
+
+
     private int _currentLoad;
-    public int currentLoad
+    public int CurrentLoad
     {
         get { return _currentLoad; }
         private set
@@ -26,19 +25,13 @@ public class Warehouse
         }
     }
 
-    private Dictionary<string, int> productCounts;
-    public bool isCanUpload = false;
-    public bool isFinish = false;
-    public int days { get; private set; }
-    public int hours { get; private set; }
+
 
     public Warehouse(int capacity, int days, int hours)
     {
         this.capacity = capacity;
-        this.currentLoad = 0;
+        this.CurrentLoad = 0;
         this.productCounts = new Dictionary<string, int>();
-        this.days = days;
-        this.hours = hours;
     }
 
     /// <summary>
@@ -50,9 +43,9 @@ public class Warehouse
     {
         lock (this)
         {
-            if (currentLoad + quantity > capacity * 0.95 && !isCanUpload)
+            if (CurrentLoad + quantity > capacity * 0.95 && !IsCanUpload)
             {
-                isCanUpload = true;
+                IsCanUpload = true;
                 Console.WriteLine("Склад заполнен на 95%, начинаем вывоз продукции.\n\n\n\n");
             }
 
@@ -62,11 +55,11 @@ public class Warehouse
             }
 
             productCounts[product.Name] += quantity;
-            currentLoad += quantity;
+            CurrentLoad += quantity;
 
-            if (currentLoad < capacity * 0.5 && isCanUpload)
+            if (CurrentLoad < capacity * 0.5 && IsCanUpload)
             {
-                isCanUpload = false;
+                IsCanUpload = false;
                 Console.WriteLine("Склад опустошен менее чем на 50%, вывоз продукции прекращен.\n\n\n\n");
             }
 
@@ -92,7 +85,7 @@ public class Warehouse
                 int quantity = Math.Min(productCounts[product], remainingCapacity);
                 load[product] = quantity;
                 productCounts[product] -= quantity;
-                currentLoad -= quantity;
+                CurrentLoad -= quantity;
                 remainingCapacity -= quantity;
             }
 
@@ -102,6 +95,6 @@ public class Warehouse
 
     public void Stop()
     {
-        isFinish = true;
+        IsFinish = true;
     }
 }
